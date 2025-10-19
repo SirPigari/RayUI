@@ -1,2 +1,4 @@
-*.exe
 raylib.h
+examples/**
+!examples/*.c
+!examples/Makefile
