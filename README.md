@@ -1,6 +1,6 @@
 # RayUI
 
-A simple, immediate-mode UI library for [Raylib](https://www.raylib.com/), designed for ease of use and integration with Raylib projects.
+A simple, immediate-mode UI header only library for [Raylib](https://www.raylib.com/), designed for ease of use and integration with Raylib projects.
 
 ## Features
 
@@ -14,6 +14,9 @@ A simple, immediate-mode UI library for [Raylib](https://www.raylib.com/), desig
 ## Supported UI Elements
 
 - **Button**: Clickable buttons with text
+- **Checkbox**: Checkable boxes with visual checkmark
+- **ColorPicker**: Interactive color selection widget
+- **NumericInput**: Numeric input with up/down buttons and validation
 - **ToggleLabel**: On/off toggle switches with custom labels
 - **Slider**: Draggable value sliders
 - **OptionSlider**: Slider that snaps to predefined options
@@ -119,6 +122,66 @@ RayUIDrawToggleLabelEx(&toggle, font, fontSize, color, hoverColor, backgroundCol
 // Value access
 bool value = RayUIGetToggleValue(&toggle);
 RayUISetToggleValue(&toggle, true);
+```
+
+### Checkbox
+
+```c
+// Creation
+RayUICheckbox checkbox = RayUICreateCheckbox(x, y, size, initialValue);
+
+// Update
+RayUIUpdateCheckbox(&checkbox, mousePoint);
+
+// Drawing
+RayUIDrawCheckbox(&checkbox);
+RayUIDrawCheckboxEx(&checkbox, checkedColor, uncheckedColor, outlineWidth, outlineColor);
+
+// Value access
+bool value = RayUIGetCheckboxValue(&checkbox);
+RayUISetCheckboxValue(&checkbox, true);
+
+// Cleanup
+RayUIFreeCheckboxTextures(&checkbox);
+```
+
+### ColorPicker
+
+```c
+// Creation
+RayUIColorPicker colorPicker = RayUICreateColorPicker(x, y, size, initialColor, mode);
+
+// Update
+RayUIUpdateColorPicker(&colorPicker);
+
+// Drawing
+RayUIDrawColorPicker(&colorPicker);
+RayUIDrawColorPickerEx(&colorPicker, outlineWidth, outlineColor, thumbColor);
+
+// Value access
+Color color = RayUIGetColorPickerValue(&colorPicker);
+RayUISetColorPickerValue(&colorPicker, newColor);
+```
+
+Color picker modes: `COLOR_PICKER_MODE_RGBA`, `COLOR_PICKER_MODE_HSVA`
+
+### NumericInput
+
+```c
+// Creation
+RayUINumericInput numericInput = RayUICreateNumericInput(x, y, width, height, initialValue, minValue, maxValue, step, decimalPlaces);
+RayUINumericInput numericInput = RayUICreateNumericInputWithSound(x, y, width, height, initialValue, minValue, maxValue, step, decimalPlaces, hoverSound, clickSound);
+
+// Update
+RayUIUpdateNumericInput(&numericInput);
+
+// Drawing
+RayUIDrawNumericInput(&numericInput, font, fontSize, bgColor, textColor);
+RayUIDrawNumericInputEx(&numericInput, font, fontSize, bgColor, textColor, buttonColor, buttonHoverColor, outlineWidth, outlineColor);
+
+// Value access
+float value = RayUIGetNumericInputValue(&numericInput);
+RayUISetNumericInputValue(&numericInput, newValue);
 ```
 
 ### Slider
@@ -254,10 +317,16 @@ See the [examples/](examples/) directory for complete working examples of each U
 
 ## Configuration
 
-You can customize the hover delay by defining `DEFAULT_HOVER_INFO_DELAY` before including rayui.h:
+You can customize various aspects of RayUI by defining these macros before including rayui.h:
 
 ```c
-#define DEFAULT_HOVER_INFO_DELAY 1.0f  // 1 second delay
+#define DEFAULT_HOVER_INFO_DELAY 1.0f  // Hover tooltip delay in seconds (default: 0.7)
+#define MAX_HOVERABLES 256              // Maximum number of hoverable elements (default: 256)
+#define CHECKBOX_DEFAULT_TEXTURE_SIZE 32 // Default size for checkbox textures (default: 32)
+#define MIN_INT -2147483648             // Minimum integer value
+#define MAX_INT 2147483647              // Maximum integer value
+#define MIN_FLOAT -3.402823466e+38F     // Minimum float value
+#define MAX_FLOAT 3.402823466e+38F      // Maximum float value
 #define RAYUI_IMPLEMENTATION
 #include "rayui.h"
 ```
